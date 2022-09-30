@@ -25,9 +25,8 @@ if __name__ == "__main__":
     im_dir_orig = 'images_janan'
     im_dir_adam = 'images_painted'
     im_dir_scaled = 'scaled_images'
-    x = np.arange(15)
-    # y1 = np.random.rand(220)
-    # y2 = np.random.rand(220)
+    num_images = len(os.listdir(im_dir_scaled))
+    x = np.arange(num_images)
 
     # SSIM_orig = getSSIM(im_dir_orig)
     # SSIM_adam = getSSIM(im_dir_adam)

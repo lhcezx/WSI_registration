@@ -3,7 +3,6 @@ import os
 import numpy as np
 import math
 
-
 def image_resize(im_dir, size):
     images = sorted(os.listdir(im_dir), key = lambda x: int(x[:-4]))
     for f in images:
