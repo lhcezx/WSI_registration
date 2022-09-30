@@ -127,3 +127,13 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# image_data
+adam_inpainted/
+adam_painted/
+diff/
+diff_inpainted/
+images/
+images_inpainted/
+video/
+scaled_images/
