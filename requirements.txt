@@ -5,4 +5,3 @@ pandas==1.4.2
 piq==0.7.0
 scipy==1.9.1
 sympy==1.11.1
-torch==1.9.0
