@@ -137,3 +137,4 @@ images/
 images_inpainted/
 video/
 scaled_images/
+*.csv

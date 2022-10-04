@@ -157,12 +157,12 @@ def main(im1_path, im2_path, file1, file2):
     diff_dir = "diff"
     if not os.path.exists(diff_dir):
         os.makedirs(diff_dir)
-    cv2.imwrite(os.path.join(diff_dir, 'diff_{}_{}.png'.format(file1.split('.')[0], file2.split('.')[0]), D1))
+    cv2.imwrite(os.path.join(diff_dir, 'diff_{}_{}.png'.format(file1.split('.')[0], file2.split('.')[0])), D1)
     return True
 
 
 def main_registration():
-    path = "./images"                   #  path for input images               
+    path = "C:/Users/lhcez/Desktop/新建文件夹 (2)"                   #  path for input images               
     files = sorted(os.listdir(path), key = lambda x: int(x[:-4]))
     print(files)
     for file1, file2 in zip(files, files[1:]):

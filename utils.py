@@ -71,20 +71,20 @@ def getDiff(im_dir):
     imgs = sorted(os.listdir(im_dir), key = lambda x: int(x[:-4]))
     for im1, im2 in zip(imgs, imgs[1:]):
         img1 = cv2.imread(os.path.join(im_dir, im1))
-        img2 = cv2.imread(os.path.join(im_dir, im2))        
+        img2 = cv2.resize(cv2.imread(os.path.join(im_dir, im2)), (img1.shape[1], img1.shape[0]))        
         D = np.abs(img1-img2)
         diff_dir = "diff"
         if not os.path.exists(diff_dir):
             os.makedirs(diff_dir)
-        cv2.imwrite(os.path.join(diff_dir, 'diff_{}_{}.png'.format(im1.split('.')[0], im2.split('.')[0]), D))
+        cv2.imwrite(os.path.join(diff_dir, 'diff_{}_{}.png'.format(im1.split('.')[0], im2.split('.')[0])), D)
 
 
 if __name__ == '__main__':
     im1_dir = "images"
     im2_dir = "images_inpainted"
     im3_dir = "scaled_images"
-
+    img_dir = "test"
     # M = cv2.getAffineTransform(p1, p2)
     # sacle_images(im1_dir, im2_dir)
-    getDiff(im3_dir)
+    getDiff(img_dir)
 
