@@ -26,13 +26,10 @@ def getResult(im_dir, metric, mean = None):
 
 
 if __name__ == "__main__":
-    # image path
     im_dir = "images_inpainted"
     num_images = len(os.listdir(im_dir))
     x = np.arange(num_images)
 
-    # SSIM_orig = getSSIM(im_dir_orig)
-    # SSIM_adam = getSSIM(im_dir_adam)
     metrics = [ssim, psnr, multi_scale_ssim, fsim, mdsi, gmsd]
     dataframe = pd.DataFrame()
     for metric in metrics:

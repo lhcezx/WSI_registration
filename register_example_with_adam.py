@@ -36,7 +36,6 @@ squared_measure = False
 
 # The number of iterations
 param_iterations = 500
-# param_iterations = 100
 # The fraction of the points to sample randomly (0.0-1.0)
 param_sampling_fraction = 0.1
 # Number of iterations between each printed output (with current distance/gradient/parameters)
@@ -59,14 +58,13 @@ def main(im1_path, im2_path, file1, file2):
 
     # Save copies of original images
     ref_im_orig = ref_gray.copy()
-    flo_im_orig = flo_gray.copy()
 
-    ref_gray = filters.normalize(ref_gray, 0.0, None)           # 归一化 x - x_min / x_max - x_min
+    ref_gray = filters.normalize(ref_gray, 0.0, None)           # x - x_min / x_max - x_min
     flo_gray = filters.normalize(flo_gray, 0.0, None)
     
-    diag = 0.5 * (transforms.image_diagonal(ref_gray, spacing) + transforms.image_diagonal(flo_gray, spacing))          # 计算图像对角线长度
+    diag = 0.5 * (transforms.image_diagonal(ref_gray, spacing) + transforms.image_diagonal(flo_gray, spacing))          
 
-    weights1 = np.ones(ref_gray.shape)                      # 图像的掩膜和权重矩阵
+    weights1 = np.ones(ref_gray.shape)                     
     mask1 = np.ones(ref_gray.shape, 'bool')
     weights2 = np.ones(flo_gray.shape)
     mask2 = np.ones(flo_gray.shape, 'bool')
@@ -74,9 +72,8 @@ def main(im1_path, im2_path, file1, file2):
     # Initialize registration framework for 2d images
     reg = Register(2)
 
-    reg.set_report_freq(param_report_freq)                  #  设置打印频率
-    reg.set_alpha_levels(alpha_levels)                      #  alpha level不知道是什么
-    # 给配准器初始化掩膜矩阵，权重矩阵，和图像矩阵，这三个矩阵大小都和对应的图像h x w大小相同，值全部初始化为1
+    reg.set_report_freq(param_report_freq)                  
+    reg.set_alpha_levels(alpha_levels)                      
     reg.set_reference_image(ref_gray)
     reg.set_reference_mask(mask1)
     reg.set_reference_weights(weights1)
@@ -87,12 +84,12 @@ def main(im1_path, im2_path, file1, file2):
 
     # Setup the Gaussian pyramid resolution levels
     
-    reg.add_pyramid_level(4, 5.0)                                   # 第一个参数为下采样倍数，第二个为标准差
+    reg.add_pyramid_level(4, 5.0)                                  
     reg.add_pyramid_level(2, 3.0)
     reg.add_pyramid_level(1, 0.0)
 
     # Learning-rate / Step lengths [[start1, end1], [start2, end2] ...] (for each pyramid level)
-    step_lengths = np.array([[1., 1.], [1., 1.], [1., 1e-1]]) * 1e-1            # 为每个金字塔层设置学习率，[start, end]
+    step_lengths = np.array([[1., 1.], [1., 1.], [1., 1e-1]]) * 1e-1           
 
     # Create the transform and add it to the registration framework (switch between affine/rigid transforms by commenting/uncommenting)
     # Affine
@@ -103,8 +100,8 @@ def main(im1_path, im2_path, file1, file2):
 
     # Set the parameters
     reg.set_iterations(param_iterations)
-    reg.set_gradient_magnitude_threshold(0.001)                     # 设置梯度幅度阈值
-    reg.set_sampling_fraction(param_sampling_fraction)              # 设置采样比例
+    reg.set_gradient_magnitude_threshold(0.001)                    
+    reg.set_sampling_fraction(param_sampling_fraction)            
     reg.set_step_lengths(step_lengths)
     reg.set_optimizer('adam')
 
@@ -154,7 +151,7 @@ def main(im1_path, im2_path, file1, file2):
     D1 = np.abs(ref_im-flo_im_warped)
     err = np.mean(D1)
     print("Err: %f" % err)
-    diff_dir = "diff"
+    diff_dir = "diff"                   #  dir to save the difference between reference image and floating image
     if not os.path.exists(diff_dir):
         os.makedirs(diff_dir)
     cv2.imwrite(os.path.join(diff_dir, 'diff_{}_{}.png'.format(file1.split('.')[0], file2.split('.')[0])), D1)
@@ -162,7 +159,7 @@ def main(im1_path, im2_path, file1, file2):
 
 
 def main_registration():
-    path = "C:/Users/lhcez/Desktop/新建文件夹 (2)"                   #  path for input images               
+    path = "images"                   #  path for input images               
     files = sorted(os.listdir(path), key = lambda x: int(x[:-4]))
     print(files)
     for file1, file2 in zip(files, files[1:]):

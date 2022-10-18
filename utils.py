@@ -2,6 +2,7 @@ import cv2
 import os
 import numpy as np
 import math
+import matplotlib.pyplot as plt
 
 def image_resize(im_dir, size):
     images = sorted(os.listdir(im_dir), key = lambda x: int(x[:-4]))
@@ -77,6 +78,22 @@ def getDiff(im_dir):
         if not os.path.exists(diff_dir):
             os.makedirs(diff_dir)
         cv2.imwrite(os.path.join(diff_dir, 'diff_{}_{}.png'.format(im1.split('.')[0], im2.split('.')[0])), D)
+    
+
+def visual_for_ransac(num_points):
+    np.random.seed(1)
+    im1 = np.ones((1000, 1000, 3))
+    im1.fill(255)
+    points = np.random.randint(0, 1000, (num_points, 2), dtype = np.int64)
+    for point in points:
+        im1 = cv2.circle(im1, (point[0], point[1]), radius = 1, color = (0, 0, 255), thickness = 5)
+    points_pertube = points + np.random.randint(0, 20, (num_points, 2), dtype = np.int64)
+    points_pertube = np.clip(points_pertube, 0, 1000)
+    for point in points_pertube:
+        im1 = cv2.circle(im1, (point[0], point[1]), radius = 1, color = (0, 255, 0), thickness = 5)
+    plt.imshow(im1[:, :, ::-1])
+    plt.show()
+
 
 
 if __name__ == '__main__':
@@ -85,6 +102,6 @@ if __name__ == '__main__':
     im3_dir = "scaled_images"
     img_dir = "test"
     # M = cv2.getAffineTransform(p1, p2)
-    # sacle_images(im1_dir, im2_dir)
-    getDiff(img_dir)
+    sacle_images(im1_dir, im2_dir)
+    # getDiff(img_dir)
 

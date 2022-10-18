@@ -2,13 +2,13 @@ import os
 import cv2
 
 # image path
-im_dir = 'C:/Users/lhcez/Desktop/Code/adam_registration/diff'
+im_dir = 'diff'
 # output video path
-video_dir = 'C:/Users/lhcez/Desktop/Code/adam_registration/video'
+video_dir = 'video'
 if not os.path.exists(video_dir):
     os.makedirs(video_dir)
 # set saved fps
-fps = 3
+fps = 6
 # get frames list
 os.listdir(im_dir)
 frames = sorted(os.listdir(im_dir), key = lambda x: int(x[:-4].split('_')[-1]))
