@@ -3,6 +3,9 @@ import os
 import numpy as np
 import math
 import matplotlib.pyplot as plt
+from tqdm.contrib import tzip
+
+Mode = "CD31"       #  Image modality used for scaling 
 
 def image_resize(im_dir, size):
     images = sorted(os.listdir(im_dir), key = lambda x: int(x[:-4]))
@@ -29,9 +32,14 @@ def contourArea(img):
     Calculate contours Area of tissus example
     '''
     im_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    ret,thresh = cv2.threshold(im_gray, 254, 255, cv2.THRESH_BINARY_INV)
+    ret,thresh = cv2.threshold(im_gray, 254, 255, cv2.THRESH_BINARY_INV) # cv.THRESH_BINARY+cv.THRESH_OTSU cv2.THRESH_BINARY_INV
     # im_show(thresh, 600, 500)
-    thresh = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_RECT,(3,3)), iterations = 10)
+    if Mode == "H&E":
+        thresh = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_RECT,(3,3)), iterations = 10)
+    elif Mode == "CD31":
+        thresh = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_RECT,(3,3)), iterations = 1)
+        thresh = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_RECT,(3,3)), iterations = 8)
+        thresh = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_RECT,(3,3)), iterations = 20)
     # im_show(thresh, 600, 500)
     contours, hierarchy = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
     # draw_contour(thresh, contours)
@@ -53,7 +61,7 @@ def sacle_images(im1_dir, im2_dir):
     out_dir = "scaled_images"
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
-    for im1, im2 in zip(img_reg, img_orig):
+    for im1, im2 in tzip(img_reg, img_orig):
         img1 = cv2.imread(os.path.join(im1_dir, im1))
         img2 = cv2.imread(os.path.join(im2_dir, im2))
         area1 = contourArea(img1)                       # registred area
@@ -70,7 +78,7 @@ def sacle_images(im1_dir, im2_dir):
 
 def getDiff(im_dir):
     imgs = sorted(os.listdir(im_dir), key = lambda x: int(x[:-4]))
-    for im1, im2 in zip(imgs, imgs[1:]):
+    for im1, im2 in tzip(imgs, imgs[1:]):
         img1 = cv2.imread(os.path.join(im_dir, im1))
         img2 = cv2.resize(cv2.imread(os.path.join(im_dir, im2)), (img1.shape[1], img1.shape[0]))        
         D = np.abs(img1-img2)
@@ -100,8 +108,7 @@ if __name__ == '__main__':
     im1_dir = "images"
     im2_dir = "images_inpainted"
     im3_dir = "scaled_images"
-    img_dir = "test"
     # M = cv2.getAffineTransform(p1, p2)
-    sacle_images(im1_dir, im2_dir)
-    # getDiff(img_dir)
+    # sacle_images(im2_dir, im3_dir)
+    getDiff(im1_dir)
 

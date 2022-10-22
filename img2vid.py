@@ -2,7 +2,7 @@ import os
 import cv2
 
 # image path
-im_dir = 'diff'
+im_dir = 'images'
 # output video path
 video_dir = 'video'
 if not os.path.exists(video_dir):
@@ -18,7 +18,7 @@ img_size = (img.shape[1], img.shape[0])
 # get seq name
 seq_name = os.path.dirname(im_dir).split('/')[-1]
 # splice video_dir
-video_dir = os.path.join(video_dir, "diff_scaled" + '.avi')
+video_dir = os.path.join(video_dir, "CD31" + '.avi')
 fourcc = cv2.VideoWriter_fourcc(*'MJPG')
 # if want to write .mp4 file, use 'MP4V'
 videowriter = cv2.VideoWriter(video_dir, fourcc, fps, img_size)
